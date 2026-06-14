@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  Dikonfirmasi
+  Diproses_Dapur  @map("Diproses Dapur")
+  Sedang_Dikirim  @map("Sedang Dikirim")
+  Selesai
+}
+
+model Order {
+  id               String      @id @default(cuid())
+  namaPembeli      String
+  totalTagihan     Int
+  items            Json? // Simpan sebagai array json: [{name, qty}]
+  metodePembayaran String?
+  tipePesanan      String      @default("REGULAR")
+  status           OrderStatus @default(Dikonfirmasi)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
